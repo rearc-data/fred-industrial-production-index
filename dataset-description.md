@@ -1,0 +1,1 @@
+This release contains information on the Industrial Production Index, which is an economic indicator of real output for facilities such as manufacturing, mining, electric, and gas utilities in the United States. The Industrial Production Index is calculated by 312 individual series based on 2007 North American Industrial Classification System (NAICS) codes.
