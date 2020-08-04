@@ -5,7 +5,7 @@
 Industrial Production Index | FRED
 =========================
 
-You can subscribe to the AWS Data Exchange product utilizing the automation featured in this repository by visiting []().
+You can subscribe to the AWS Data Exchange product utilizing the automation featured in this repository by visiting [https://aws.amazon.com/marketplace/pp/prodview-eh3rk4ni4u3qu](https://aws.amazon.com/marketplace/pp/prodview-eh3rk4ni4u3qu).
 
 ## Main Overview
 
