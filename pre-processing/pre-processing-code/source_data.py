@@ -1,16 +1,3 @@
-''' 
-data_endpoints = [
-        '.xls',
-        '.csv'
-    ]
-
-      source_dataset_url = 'https://fred.stlouisfed.org/graph/fredgraph'
-    url_end = '?id=INDPRO'
-    try:
-        response = urlopen(source_dataset_url + frmt + url_end)
-'''
-
-
 import os
 import boto3
 import time
@@ -23,11 +10,11 @@ from s3_md5_compare import md5_compare
 def data_to_s3(endpoint):
     source_dataset_url = 'https://fred.stlouisfed.org/graph/fredgraph'
     url_end = '?id=INDPRO'
-    response = urlopen(source_dataset_url + endpoint + url_end)
+    response = None
     retries = 5
     for attempt in range(retries):
         try:
-            response = urlopen(source_dataset_url)
+            response = urlopen(source_dataset_url + endpoint + url_end)
         except HTTPError as e:
             if attempt == retries:
                 raise Exception('HTTPError: ', e.code)
@@ -43,7 +30,7 @@ def data_to_s3(endpoint):
         raise Exception('There was an issue downloading the dataset')
 
     data_set_name = os.environ['DATA_SET_NAME']
-    filename = data_set_name +
+    filename = data_set_name + endpoint
     file_location = '/tmp/' + filename
 
     with open(file_location, 'wb') as f:
@@ -52,8 +39,6 @@ def data_to_s3(endpoint):
     s3_bucket = os.environ['S3_BUCKET']
     new_s3_key = data_set_name + '/dataset/' + filename
     s3 = boto3.client('s3')
-
-    s3.upload_file(file_location, s3_bucket, new_s3_key + filename)
 
     has_changes = md5_compare(s3, s3_bucket, new_s3_key, file_location)
     if has_changes:
@@ -67,8 +52,8 @@ def data_to_s3(endpoint):
 
 
 def source_dataset():
-    data_endpoints = []
-    with (Pool(8)) as p:
+    data_endpoints = ['.xls', '.csv']
+    with (Pool(2)) as p:
         s3_uploads = p.map(data_to_s3, data_endpoints)
 
     count_updated_data = sum(
